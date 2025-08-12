@@ -8,11 +8,26 @@ import requests
 from time import sleep
 
 class Connection(object):
+
+    _instance= None #stores the single instance
     sleeptime= .1
     APIKey= ''
 
+    '''
+    Makes this class a singleton, there is no reason to ever have multiple instances 
+    of this class
+    '''
+    def __new__ (cls):
+        if cls._instance is None:
+            cls._instance= super().__new__(cls) #create a new instance if none exists
+        return cls._instance
+
+
+
     def __init__(self):
-        self.APIKey= os.environ.get("BungieAPIKey")
+        if not hasattr(self, "_initialized"):
+            self.APIKey = os.environ.get("BungieAPIKey")
+            self._initialized = True
 
     '''
     This is the most general call possible
